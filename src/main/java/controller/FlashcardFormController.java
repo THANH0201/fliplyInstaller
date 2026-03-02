@@ -3,15 +3,15 @@ package controller;
 import controller.components.HeaderController;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import model.AppState;
 import model.entity.Flashcard;
-import model.service.FlashcardService;
-import view.Navigator;
 import model.entity.FlashcardSet;
 import model.entity.User;
-
+import model.service.FlashcardService;
+import view.Navigator;
 
 public class FlashcardFormController {
 
@@ -25,7 +25,7 @@ public class FlashcardFormController {
     @FXML
     private TextArea definitionArea;
 
-    private final FlashcardService flashcardService =  new FlashcardService();
+    private final FlashcardService flashcardService = new FlashcardService();
 
     @FXML
     private void initialize() {
@@ -43,7 +43,6 @@ public class FlashcardFormController {
             }
         }
 
-        // Prefill if EDIT
         if (AppState.flashcardFormMode.get() == AppState.FormMode.EDIT) {
             termField.setText(AppState.selectedTerm.get());
             definitionArea.setText(AppState.selectedDefinition.get());
@@ -52,7 +51,6 @@ public class FlashcardFormController {
             definitionArea.clear();
         }
 
-        // Keep Flashcards menu active
         AppState.navOverride.set(AppState.NavItem.FLASHCARDS);
     }
 
@@ -65,37 +63,32 @@ public class FlashcardFormController {
 
         FlashcardSet set = AppState.selectedFlashcardSet.get();
         User user = AppState.currentUser.get();
-
         if (set == null || user == null) return;
 
-        // EDIT MODE
         if (AppState.flashcardFormMode.get() == AppState.FormMode.EDIT) {
             int idx = AppState.editingIndex.get();
+            if (idx < 0 || idx >= AppState.currentDetailList.size()) return;
 
-            if (idx >= 0 && idx < AppState.currentDetailList.size()) {
-                Flashcard card = AppState.currentDetailList.get(idx);
+            Flashcard card = AppState.currentDetailList.get(idx);
+            card.setTerm(term);
+            card.setDefinition(def);
 
-                card.setTerm(term);
-                card.setDefinition(def);
-
-                flashcardService.update(card);
-            }
+            flashcardService.update(card);
 
         } else {
-            // ADD MODE
-            Flashcard newCard = new Flashcard(term, def, set, user);
-            flashcardService.save(newCard);
-
-            // Keep all lists in sync: current detail list, the selected set's card list, and global list
-            AppState.currentDetailList.add(newCard);
-            if (set != null) {
-                set.getCards().add(newCard);
+            Flashcard created = flashcardService.createFlashcard(term, def, set, user);
+            if (created == null) {
+                Alert a = new Alert(Alert.AlertType.WARNING, "This term already exists in the selected set.");
+                a.showAndWait();
+                return;
             }
-            AppState.myFlashcards.add(newCard);
+
+            // Keep lists in sync
+            AppState.currentDetailList.add(created);
+            set.getCards().add(created);
+            AppState.myFlashcards.add(created);
         }
 
-        // After save -> back to list
-        //AppState.navOverride.set(AppState.NavItem.FLASHCARDS);
         Navigator.go(AppState.Screen.FLASHCARDS);
     }
 

@@ -33,9 +33,10 @@ public class FlashcardSetController {
             Navigator.go(AppState.Screen.CLASS_DETAIL);
             return;
         }
-        // Use the live collection from the selected set so edits/deletes map back correctly
+
+        // Use live collection from selected set
         setCards = set.getCards();
-        // Header
+
         if (headerController != null) {
             headerController.setTitle(set.getSubject());
             headerController.setSubtitle("Total: " + (setCards == null ? 0 : setCards.size()));
@@ -52,14 +53,13 @@ public class FlashcardSetController {
 
     private void renderGrid() {
         termGrid.getChildren().clear();
-
         if (setCards == null || setCards.isEmpty()) return;
 
         int i = 0;
         for (Flashcard item : setCards) {
             int index = i;
 
-            Node tile = loadTile(item.getTerm(), /*read*/ false, () -> {
+            Node tile = loadTile(item.getTerm(), false, () -> {
                 AppState.currentDetailList.setAll(setCards);
                 AppState.currentDetailIndex.set(index);
 
