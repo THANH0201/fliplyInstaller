@@ -1,5 +1,10 @@
 pipeline {
     agent any
+    environment {
+            DB_URL = "jdbc:mariadb://localhost:3306/fliply"
+            DB_USER = "appuser"
+            DB_PASS = "password"
+        }
 
     stages {
 
@@ -23,7 +28,7 @@ pipeline {
 
         stage('Wait for DB') {
             steps {
-                bat "ping 127.0.0.1 -n 10 > nul"
+                bat "timeout /t 20 /nobreak > nul"
             }
         }
 
@@ -35,13 +40,18 @@ pipeline {
 
         stage('Build') {
             steps {
-                bat 'mvn clean install'
+                bat 'mvn clean install -DskipTests'
             }
         }
 
         stage('Test') {
             steps {
-                bat 'mvn -Dtest=*DaoTest,*ServiceTest,*RepositoryTest test'
+                bat """
+                    mvn -Dtest=*DaoTest,*ServiceTest,*RepositoryTest test ^
+                    -Djakarta.persistence.jdbc.url=${env.DB_URL} ^
+                    -Djakarta.persistence.jdbc.user=${env.DB_USER} ^
+                    -Djakarta.persistence.jdbc.password=${env.DB_PASS} ^
+                    """
             }
         }
 
@@ -81,11 +91,7 @@ pipeline {
             }
         }
     }
-    environment {
-        DB_URL = "jdbc:mariadb://localhost:3306/fliply"
-        DB_USER = "appuser"
-        DB_PASS = "password"
-    }
+
 
     post {
         always {
