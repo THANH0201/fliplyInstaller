@@ -45,15 +45,16 @@ pipeline {
         }
 
        stage('Test') {
-        steps {
-            bat """
-                set DB_URL=${env.DB_URL} && ^
-                set DB_USER=${env.DB_USER} && ^
-                set DB_PASS=${env.DB_PASS} && ^
-                mvn -Dtest=*DaoTest,*ServiceTest,*RepositoryTest test
-            """
-            }
-        }
+    steps {
+        bat """
+set DB_URL=${env.DB_URL} && ^
+set DB_USER=${env.DB_USER} && ^
+set DB_PASS=${env.DB_PASS} && ^
+mvn -Dtest=*DaoTest,*ServiceTest,*RepositoryTest test
+        """
+    }
+}
+
         
         stage('Code Coverage') {
             steps {
