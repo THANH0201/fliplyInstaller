@@ -34,7 +34,7 @@ public class FlashcardsController {
         // Load Flashcards
         User user = AppState.currentUser.get();
         if (user != null) {
-            List<Flashcard> cards = flashcardService.getFlashcardsBySet(user.getUserId());
+            List<Flashcard> cards = flashcardService.getFlashcardsByUser(user.getUserId());
             AppState.myFlashcards.setAll(cards);
         }
 
