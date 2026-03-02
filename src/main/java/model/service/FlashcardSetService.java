@@ -40,4 +40,8 @@ public class FlashcardSetService {
             setDao.delete(set);
         }
     }
+    public List<FlashcardSet> getAllSets() {
+        return setDao.findAll();
+    }
+
 }
