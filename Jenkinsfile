@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-            DB_URL = "jdbc:mariadb://host.docker.internal:3307/fliply"
+            DB_URL = "jdbc:mariadb://localhost:3307/fliply"
             DB_USER = "appuser"
             DB_PASS = "password"
         }
