@@ -1,0 +1,26 @@
+version: "3.9"
+
+services:
+  fliply:
+    image: thanh0201/fliply:latest
+    container_name: fliply_app
+    environment:
+      DISPLAY: ${DISPLAY}
+      DB_URL: ${DB_URL}
+      DB_USER: ${DB_USER}
+      DB_PASS: ${DB_PASS}
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+    depends_on:
+      - mariadb
+
+  mariadb:
+    image: mariadb:10.6
+    container_name: fliply_db
+    environment:
+      MARIADB_ROOT_PASSWORD: root
+      MARIADB_DATABASE: fliply
+      MARIADB_USER: appuser
+      MARIADB_PASSWORD: password
+    ports:
+      - "3307:3306"

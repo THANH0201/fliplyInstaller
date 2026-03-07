@@ -4,22 +4,39 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class MariaDbJPAConnection {
 
-    private static EntityManagerFactory emf =
-            Persistence.createEntityManagerFactory("FliplyDbUnit");
+    private static EntityManagerFactory emf = buildEntityManagerFactory();
 
-    public static EntityManager createEntityManager() {
-        // Recreate EMF if it's closed (for test scenarios)
-        if (emf == null || !emf.isOpen()) {
-            emf = Persistence.createEntityManagerFactory("FliplyDbUnit");
-        }
-        return emf.createEntityManager();
+    private static EntityManagerFactory buildEntityManagerFactory() {
+
+        // Read environment variables
+        String url = System.getenv("DB_URL");
+        String user = System.getenv("DB_USER");
+        String pass = System.getenv("DB_PASS");
+
+        // Fallback for local development
+        if (url == null) url = "jdbc:mariadb://localhost:3307/fliply";
+        if (user == null) user = "root";
+        if (pass == null) pass = "root";
+
+        Map<String, Object> props = new HashMap<>();
+        props.put("jakarta.persistence.jdbc.url", url);
+        props.put("jakarta.persistence.jdbc.user", user);
+        props.put("jakarta.persistence.jdbc.password", pass);
+        props.put("jakarta.persistence.jdbc.driver", "org.mariadb.jdbc.Driver");
+
+        return Persistence.createEntityManagerFactory("FliplyDbUnit", props);
     }
 
-    @Deprecated
-    public static EntityManager getInstance() {
-        return createEntityManager();
+    public static EntityManager createEntityManager() {
+        if (emf == null || !emf.isOpen()) {
+            emf = buildEntityManagerFactory();
+        }
+        return emf.createEntityManager();
     }
 
     public static void shutdown() {
