@@ -14,9 +14,9 @@ public class MariaDbJPAConnection {
     private static EntityManagerFactory buildEntityManagerFactory() {
 
         // Read environment variables
-        String url = System.getenv("DB_URL");
-        String user = System.getenv("DB_USER");
-        String pass = System.getenv("DB_PASS");
+        String url = System.getProperty("DB_URL", System.getenv("DB_URL"));
+        String user = System.getProperty("DB_USER", System.getenv("DB_USER"));
+        String pass = System.getProperty("DB_PASS", System.getenv("DB_PASS"));
 
         // Fallback for local development
         if (url == null) url = "jdbc:mariadb://localhost:3307/fliply";
