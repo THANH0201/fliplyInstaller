@@ -34,7 +34,7 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/nguyngc/fliply.git'
+                git branch: 'main', url: 'https://github.com/thanh0201/fliply.git'
             }
         }
 
