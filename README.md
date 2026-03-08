@@ -1,4 +1,4 @@
-# Online Flashcard System for Study
+# Online Flashcard System for Study- install(.exe)
 
 ## Overview
 
