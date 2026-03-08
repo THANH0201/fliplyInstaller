@@ -13,18 +13,34 @@
         <class>model.entity.QuizDetails</class>
         <class>model.entity.ClassDetails</class>
         <class>model.entity.Study</class>
+<!--        <properties>-->
+<!--&lt;!&ndash;            without docker&ndash;&gt;-->
+<!--&lt;!&ndash;            <property name="jakarta.persistence.jdbc.url" value="jdbc:mariadb://localhost:3306/fliply"/>&ndash;&gt;-->
+<!--&lt;!&ndash;            <property name="jakarta.persistence.jdbc.user" value="appuser"/>&ndash;&gt;-->
+<!--&lt;!&ndash;            <property name="jakarta.persistence.jdbc.password" value="password"/>&ndash;&gt;-->
+
+<!--&lt;!&ndash;            build docker&ndash;&gt;-->
+<!--            <property name="jakarta.persistence.jdbc.url" value="${DB_URL}"/>-->
+<!--            <property name="jakarta.persistence.jdbc.user" value="${DB_USER}"/>-->
+<!--            <property name="jakarta.persistence.jdbc.password" value="${DB_PASS}"/>-->
+
+<!--            <property name="jakarta.persistence.jdbc.driver" value="org.mariadb.jdbc.Driver"/>-->
+<!--&lt;!&ndash;            <property name="jakarta.persistence.schema-generation.database.action" value="drop-and-create"/>&ndash;&gt;-->
+<!--            <property name="hibernate.hbm2ddl.auto" value="update"/>-->
+<!--            <property name="hibernate.dialect" value="org.hibernate.dialect.MariaDBDialect"/>-->
+<!--            <property name="hibernate.show_sql" value="true"/>-->
+<!--        </properties>-->
+        <!-- H2 embedded database for packaged .exe -->
         <properties>
-<!--            <property name="jakarta.persistence.jdbc.url" value="jdbc:mariadb://localhost:3306/fliply"/>-->
-<!--            <property name="jakarta.persistence.jdbc.user" value="appuser"/>-->
-<!--            <property name="jakarta.persistence.jdbc.password" value="password"/>-->
-            <property name="jakarta.persistence.jdbc.url" value="${DB_URL}"/>
-            <property name="jakarta.persistence.jdbc.user" value="${DB_USER}"/>
-            <property name="jakarta.persistence.jdbc.password" value="${DB_PASS}"/>
-            <property name="jakarta.persistence.jdbc.driver" value="org.mariadb.jdbc.Driver"/>
-<!--            <property name="jakarta.persistence.schema-generation.database.action" value="drop-and-create"/>-->
+            <property name="jakarta.persistence.jdbc.url" value="jdbc:h2:file:./data/fliply-db/>
+            <property name="jakarta.persistence.jdbc.driver" value="org.h2.Driver"/>
+            <property name="jakarta.persistence.jdbc.user" value="sa"/>
+            <property name="jakarta.persistence.jdbc.password" value=""/>
+
+            <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
             <property name="hibernate.hbm2ddl.auto" value="update"/>
-            <property name="hibernate.dialect" value="org.hibernate.dialect.MariaDBDialect"/>
             <property name="hibernate.show_sql" value="true"/>
         </properties>
+
     </persistence-unit>
 </persistence>

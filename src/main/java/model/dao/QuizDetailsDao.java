@@ -2,7 +2,7 @@ package model.dao;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
-import model.datasource.MariaDbJPAConnection;
+import model.datasource.H2JPAConnection;
 import model.entity.QuizDetails;
 
 import java.util.List;
@@ -10,7 +10,7 @@ import java.util.List;
 public class QuizDetailsDao {
 
     public void persist(QuizDetails quizDetails) {
-        try (EntityManager em = MariaDbJPAConnection.createEntityManager()) {
+        try (EntityManager em = H2JPAConnection.createEntityManager()) {
             em.getTransaction().begin();
             try {
                 em.persist(quizDetails);
@@ -23,20 +23,20 @@ public class QuizDetailsDao {
     }
 
     public QuizDetails find(int quizDetailsId) {
-        try (EntityManager em = MariaDbJPAConnection.createEntityManager()) {
+        try (EntityManager em = H2JPAConnection.createEntityManager()) {
             return em.find(QuizDetails.class, Integer.valueOf(quizDetailsId));
         }
     }
 
     public List<QuizDetails> findAll() {
-        try (EntityManager em = MariaDbJPAConnection.createEntityManager()) {
+        try (EntityManager em = H2JPAConnection.createEntityManager()) {
             return em.createQuery("SELECT qd FROM QuizDetails qd", QuizDetails.class)
                     .getResultList();
         }
     }
 
     public void delete(QuizDetails quizDetails) {
-        try (EntityManager em = MariaDbJPAConnection.createEntityManager()) {
+        try (EntityManager em = H2JPAConnection.createEntityManager()) {
             em.getTransaction().begin();
             try {
                 if (!em.contains(quizDetails)) {
@@ -52,7 +52,7 @@ public class QuizDetailsDao {
     }
 
     public List<QuizDetails> findByQuizId(int quizId) {
-        try (EntityManager em = MariaDbJPAConnection.createEntityManager()) {
+        try (EntityManager em = H2JPAConnection.createEntityManager()) {
             TypedQuery<QuizDetails> q = em.createQuery(
                     "SELECT qd FROM QuizDetails qd WHERE qd.quiz.quizId = :qid",
                     QuizDetails.class
@@ -63,7 +63,7 @@ public class QuizDetailsDao {
     }
 
     public boolean exists(int quizId, int flashcardId) {
-        try (EntityManager em = MariaDbJPAConnection.createEntityManager()) {
+        try (EntityManager em = H2JPAConnection.createEntityManager()) {
             Long count = em.createQuery(
                             "SELECT COUNT(qd) FROM QuizDetails qd " +
                                     "WHERE qd.quiz.quizId = :qid AND qd.flashcard.flashcardId = :fid",

@@ -2,7 +2,7 @@ package model.dao;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
-import model.datasource.MariaDbJPAConnection;
+import model.datasource.H2JPAConnection;
 import model.entity.Study;
 
 import java.util.List;
@@ -10,7 +10,7 @@ import java.util.List;
 public class StudyDao {
 
     public void persist(Study study) {
-        try (EntityManager em = MariaDbJPAConnection.createEntityManager()) {
+        try (EntityManager em = H2JPAConnection.createEntityManager()) {
             em.getTransaction().begin();
             try {
                 em.persist(study);
@@ -23,20 +23,20 @@ public class StudyDao {
     }
 
     public Study find(int id) {
-        try (EntityManager em = MariaDbJPAConnection.createEntityManager()) {
+        try (EntityManager em = H2JPAConnection.createEntityManager()) {
             return em.find(Study.class, Integer.valueOf(id));
         }
     }
 
     public List<Study> findAll() {
-        try (EntityManager em = MariaDbJPAConnection.createEntityManager()) {
+        try (EntityManager em = H2JPAConnection.createEntityManager()) {
             TypedQuery<Study> query = em.createQuery("SELECT s FROM Study s", Study.class);
             return query.getResultList();
         }
     }
 
     public void update(Study study) {
-        try (EntityManager em = MariaDbJPAConnection.createEntityManager()) {
+        try (EntityManager em = H2JPAConnection.createEntityManager()) {
             em.getTransaction().begin();
             try {
                 em.merge(study);
@@ -49,7 +49,7 @@ public class StudyDao {
     }
 
     public void delete(Study study) {
-        try (EntityManager em = MariaDbJPAConnection.createEntityManager()) {
+        try (EntityManager em = H2JPAConnection.createEntityManager()) {
             em.getTransaction().begin();
             try {
                 if (!em.contains(study)) {
@@ -65,7 +65,7 @@ public class StudyDao {
     }
 
     public List<Study> findByUserId(int userId) {
-        try (EntityManager em = MariaDbJPAConnection.createEntityManager()) {
+        try (EntityManager em = H2JPAConnection.createEntityManager()) {
             TypedQuery<Study> query = em.createQuery(
                     "SELECT s FROM Study s WHERE s.user.userId = :uid",
                     Study.class
@@ -76,7 +76,7 @@ public class StudyDao {
     }
 
     public List<Study> findByFlashcardSetId(int setId) {
-        try (EntityManager em = MariaDbJPAConnection.createEntityManager()) {
+        try (EntityManager em = H2JPAConnection.createEntityManager()) {
             TypedQuery<Study> query = em.createQuery(
                     "SELECT s FROM Study s WHERE s.flashcardSet.flashcardSetId = :sid",
                     Study.class
@@ -87,7 +87,7 @@ public class StudyDao {
     }
 
     public Study findByStudentAndSet(int studentId, int setId) {
-        try(EntityManager em = MariaDbJPAConnection.createEntityManager()) {
+        try(EntityManager em = H2JPAConnection.createEntityManager()) {
             TypedQuery<Study> query = em.createQuery(
                     "SELECT s FROM Study s WHERE s.user.userId = :uid AND s.flashcardSet.flashcardSetId = :sid",
                  Study.class
@@ -102,7 +102,7 @@ public class StudyDao {
 
 
     public boolean existsByUserAndSet(int userId, int setId) {
-        try (EntityManager em = MariaDbJPAConnection.createEntityManager()) {
+        try (EntityManager em = H2JPAConnection.createEntityManager()) {
             TypedQuery<Long> query = em.createQuery(
                     "SELECT COUNT(s) FROM Study s " +
                             "WHERE s.user.userId = :uid AND s.flashcardSet.flashcardSetId = :sid",

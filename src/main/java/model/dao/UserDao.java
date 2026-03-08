@@ -2,7 +2,7 @@ package model.dao;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
-import model.datasource.MariaDbJPAConnection;
+import model.datasource.H2JPAConnection;
 import model.entity.User;
 
 import java.util.List;
@@ -13,7 +13,7 @@ public class UserDao {
      * Persist a new User entity into the database.
      */
     public void persist(User user) {
-        try (EntityManager em = MariaDbJPAConnection.createEntityManager()) {
+        try (EntityManager em = H2JPAConnection.createEntityManager()) {
             em.getTransaction().begin();
             try {
                 em.persist(user);
@@ -29,7 +29,7 @@ public class UserDao {
      * Find a User by its primary key (userId).
      */
     public User find(int userId) {
-        try (EntityManager em = MariaDbJPAConnection.createEntityManager()) {
+        try (EntityManager em = H2JPAConnection.createEntityManager()) {
             return em.find(User.class, Integer.valueOf(userId));
         }
     }
@@ -38,7 +38,7 @@ public class UserDao {
      * Retrieve all User entities.
      */
     public List<User> findAll() {
-        try (EntityManager em = MariaDbJPAConnection.createEntityManager()) {
+        try (EntityManager em = H2JPAConnection.createEntityManager()) {
             TypedQuery<User> query = em.createQuery("SELECT u FROM User u", User.class);
             return query.getResultList();
         }
@@ -48,7 +48,7 @@ public class UserDao {
      * Update an existing User entity.
      */
     public void update(User user) {
-        try (EntityManager em = MariaDbJPAConnection.createEntityManager()) {
+        try (EntityManager em = H2JPAConnection.createEntityManager()) {
             em.getTransaction().begin();
             try {
                 em.merge(user);
@@ -64,7 +64,7 @@ public class UserDao {
      * Delete a User entity.
      */
     public void delete(User user) {
-        try (EntityManager em = MariaDbJPAConnection.createEntityManager()) {
+        try (EntityManager em = H2JPAConnection.createEntityManager()) {
             em.getTransaction().begin();
             try {
                 User managed = em.contains(user) ? user : em.merge(user);
@@ -81,7 +81,7 @@ public class UserDao {
      * Find a user by email.
      */
     public User findByEmail(String email) {
-        try (EntityManager em = MariaDbJPAConnection.createEntityManager()) {
+        try (EntityManager em = H2JPAConnection.createEntityManager()) {
             List<User> results = em.createQuery(
                     "SELECT u FROM User u WHERE u.email = :email",
                     User.class
@@ -95,7 +95,7 @@ public class UserDao {
      * Check if a user exists by email.
      */
     public boolean existsByEmail(String email) {
-        try (EntityManager em = MariaDbJPAConnection.createEntityManager()) {
+        try (EntityManager em = H2JPAConnection.createEntityManager()) {
             Long count = em.createQuery(
                     "SELECT COUNT(u) FROM User u WHERE u.email = :email",
                     Long.class
@@ -109,7 +109,7 @@ public class UserDao {
      * Login: find user by email + password
      */
     public User findByEmailAndPassword(String email, String password) {
-        try (EntityManager em = MariaDbJPAConnection.createEntityManager()) {
+        try (EntityManager em = H2JPAConnection.createEntityManager()) {
             List<User> results = em.createQuery(
                             "SELECT u FROM User u WHERE u.email = :email AND u.password = :pw",
                             User.class
@@ -125,7 +125,7 @@ public class UserDao {
      * Find all users by role (0 = student, 1 = teacher, ...)
      */
     public List<User> findByRole(int role) {
-        try (EntityManager em = MariaDbJPAConnection.createEntityManager()) {
+        try (EntityManager em = H2JPAConnection.createEntityManager()) {
             TypedQuery<User> query = em.createQuery(
                     "SELECT u FROM User u WHERE u.role = :role",
                     User.class

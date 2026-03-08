@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import model.AppState;
 
 @Entity
-@Table(name = "USER")
+@Table(name = "`USER`")
 public class User {
 
     @Id

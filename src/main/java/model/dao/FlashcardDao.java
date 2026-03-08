@@ -2,7 +2,7 @@ package model.dao;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
-import model.datasource.MariaDbJPAConnection;
+import model.datasource.H2JPAConnection;
 import model.entity.Flashcard;
 
 import java.util.List;
@@ -10,7 +10,7 @@ import java.util.List;
 public class FlashcardDao {
 
     public void persist(Flashcard flashcard) {
-        try (EntityManager em = MariaDbJPAConnection.createEntityManager()) {
+        try (EntityManager em = H2JPAConnection.createEntityManager()) {
             em.getTransaction().begin();
             try {
                 em.persist(flashcard);
@@ -23,13 +23,13 @@ public class FlashcardDao {
     }
 
     public Flashcard find(int flashcardId) {
-        try (EntityManager em = MariaDbJPAConnection.createEntityManager()) {
+        try (EntityManager em = H2JPAConnection.createEntityManager()) {
             return em.find(Flashcard.class, Integer.valueOf(flashcardId));
         }
     }
 
     public List<Flashcard> findAll() {
-        try (EntityManager em = MariaDbJPAConnection.createEntityManager()) {
+        try (EntityManager em = H2JPAConnection.createEntityManager()) {
             TypedQuery<Flashcard> query = em.createQuery(
                     "SELECT f FROM Flashcard f", Flashcard.class
             );
@@ -38,7 +38,7 @@ public class FlashcardDao {
     }
 
     public void update(Flashcard flashcard) {
-        try (EntityManager em = MariaDbJPAConnection.createEntityManager()) {
+        try (EntityManager em = H2JPAConnection.createEntityManager()) {
             em.getTransaction().begin();
             try {
                 em.merge(flashcard);
@@ -51,7 +51,7 @@ public class FlashcardDao {
     }
 
     public void delete(Flashcard flashcard) {
-        try (EntityManager em = MariaDbJPAConnection.createEntityManager()) {
+        try (EntityManager em = H2JPAConnection.createEntityManager()) {
             em.getTransaction().begin();
             try {
                 if (!em.contains(flashcard)) {
@@ -67,7 +67,7 @@ public class FlashcardDao {
     }
 
     public List<Flashcard> findByFlashcardSetId(int setId) {
-        try (EntityManager em = MariaDbJPAConnection.createEntityManager()) {
+        try (EntityManager em = H2JPAConnection.createEntityManager()) {
             TypedQuery<Flashcard> query = em.createQuery(
                     "SELECT f FROM Flashcard f WHERE f.flashcardSet.flashcardSetId = :sid",
                     Flashcard.class
@@ -78,7 +78,7 @@ public class FlashcardDao {
     }
 
     public List<Flashcard> findByUserId(int userId) {
-        try (EntityManager em = MariaDbJPAConnection.createEntityManager()) {
+        try (EntityManager em = H2JPAConnection.createEntityManager()) {
             TypedQuery<Flashcard> query = em.createQuery(
                     "SELECT f FROM Flashcard f WHERE f.user.userId = :uid",
                     Flashcard.class
@@ -89,7 +89,7 @@ public class FlashcardDao {
     }
 
     public boolean existsByTermInSet(String term, int setId) {
-        try (EntityManager em = MariaDbJPAConnection.createEntityManager()) {
+        try (EntityManager em = H2JPAConnection.createEntityManager()) {
             TypedQuery<Long> query = em.createQuery(
                     "SELECT COUNT(f) FROM Flashcard f " +
                             "WHERE f.term = :term AND f.flashcardSet.flashcardSetId = :sid",
@@ -103,7 +103,7 @@ public class FlashcardDao {
     }
 
     public List<Flashcard> findAvailableForUser(int userId) {
-        try (EntityManager em = MariaDbJPAConnection.createEntityManager()) {
+        try (EntityManager em = H2JPAConnection.createEntityManager()) {
 
             // flashcard created by user or flashcard in class (user already join)
             TypedQuery<Flashcard> query = em.createQuery(

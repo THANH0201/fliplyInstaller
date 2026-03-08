@@ -2,7 +2,7 @@ package model.dao;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
-import model.datasource.MariaDbJPAConnection;
+import model.datasource.H2JPAConnection;
 import model.entity.ClassModel;
 
 import java.util.List;
@@ -10,7 +10,7 @@ import java.util.List;
 public class ClassModelDao {
 
     public void persist(ClassModel classModel) {
-        try (EntityManager em = MariaDbJPAConnection.createEntityManager()) {
+        try (EntityManager em = H2JPAConnection.createEntityManager()) {
             em.getTransaction().begin();
             try {
                 em.persist(classModel);
@@ -23,13 +23,13 @@ public class ClassModelDao {
     }
 
     public ClassModel findById(int classId) {
-        try (EntityManager em = MariaDbJPAConnection.createEntityManager()) {
+        try (EntityManager em = H2JPAConnection.createEntityManager()) {
             return em.find(ClassModel.class, Integer.valueOf(classId));
         }
     }
 
     public List<ClassModel> findAll() {
-        try (EntityManager em = MariaDbJPAConnection.createEntityManager()) {
+        try (EntityManager em = H2JPAConnection.createEntityManager()) {
             TypedQuery<ClassModel> query =
                     em.createQuery("SELECT c FROM ClassModel c", ClassModel.class);
             return query.getResultList();
@@ -37,7 +37,7 @@ public class ClassModelDao {
     }
 
     public void update(ClassModel classModel) {
-        try (EntityManager em = MariaDbJPAConnection.createEntityManager()) {
+        try (EntityManager em = H2JPAConnection.createEntityManager()) {
             em.getTransaction().begin();
             try {
                 em.merge(classModel);
@@ -50,7 +50,7 @@ public class ClassModelDao {
     }
 
     public void delete(ClassModel classModel) {
-        try (EntityManager em = MariaDbJPAConnection.createEntityManager()) {
+        try (EntityManager em = H2JPAConnection.createEntityManager()) {
             em.getTransaction().begin();
             try {
                 if (!em.contains(classModel)) {
@@ -66,7 +66,7 @@ public class ClassModelDao {
     }
 
     public List<ClassModel> findByTeacherId(int teacherId) {
-        try (EntityManager em = MariaDbJPAConnection.createEntityManager()) {
+        try (EntityManager em = H2JPAConnection.createEntityManager()) {
             TypedQuery<ClassModel> query = em.createQuery(
                     "SELECT c FROM ClassModel c WHERE c.teacher.userId = :tid",
                     ClassModel.class
@@ -77,7 +77,7 @@ public class ClassModelDao {
     }
 
     public boolean existsByNameAndTeacher(String className, int teacherId) {
-        try (EntityManager em = MariaDbJPAConnection.createEntityManager()) {
+        try (EntityManager em = H2JPAConnection.createEntityManager()) {
             TypedQuery<Long> query = em.createQuery(
                     "SELECT COUNT(c) FROM ClassModel c WHERE c.className = :name AND c.teacher.userId = :tid",
                     Long.class
@@ -91,7 +91,7 @@ public class ClassModelDao {
 
 
     public List<ClassModel> findClassesOfUser(int userId) {
-        EntityManager em = MariaDbJPAConnection.createEntityManager();
+        EntityManager em = H2JPAConnection.createEntityManager();
         return em.createQuery("""
         SELECT DISTINCT c FROM ClassModel c
         LEFT JOIN FETCH c.students
@@ -108,7 +108,7 @@ public class ClassModelDao {
     }
 
     public ClassModel findByIdWithRelations(int classId) {
-        try (EntityManager em = MariaDbJPAConnection.createEntityManager()) {
+        try (EntityManager em = H2JPAConnection.createEntityManager()) {
             return em.createQuery("""
                                 SELECT DISTINCT c FROM ClassModel c
                                 LEFT JOIN FETCH c.students s

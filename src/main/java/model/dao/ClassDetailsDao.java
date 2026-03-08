@@ -2,7 +2,7 @@ package model.dao;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
-import model.datasource.MariaDbJPAConnection;
+import model.datasource.H2JPAConnection;
 import model.entity.ClassDetails;
 import model.entity.ClassModel;
 
@@ -11,7 +11,7 @@ import java.util.List;
 public class ClassDetailsDao {
 
     public void persist(ClassDetails classDetails) {
-        try (EntityManager em = MariaDbJPAConnection.createEntityManager()) {
+        try (EntityManager em = H2JPAConnection.createEntityManager()) {
             em.getTransaction().begin();
             try {
                 em.persist(classDetails);
@@ -24,13 +24,13 @@ public class ClassDetailsDao {
     }
 
     public ClassDetails find(int id) {
-        try (EntityManager em = MariaDbJPAConnection.createEntityManager()) {
+        try (EntityManager em = H2JPAConnection.createEntityManager()) {
             return em.find(ClassDetails.class, Integer.valueOf(id));
         }
     }
 
     public List<ClassDetails> findAll() {
-        try (EntityManager em = MariaDbJPAConnection.createEntityManager()) {
+        try (EntityManager em = H2JPAConnection.createEntityManager()) {
             TypedQuery<ClassDetails> query = em.createQuery(
                     "SELECT cd FROM ClassDetails cd", ClassDetails.class
             );
@@ -39,7 +39,7 @@ public class ClassDetailsDao {
     }
 
     public void update(ClassDetails classDetails) {
-        try (EntityManager em = MariaDbJPAConnection.createEntityManager()) {
+        try (EntityManager em = H2JPAConnection.createEntityManager()) {
             em.getTransaction().begin();
             try {
                 em.merge(classDetails);
@@ -52,7 +52,7 @@ public class ClassDetailsDao {
     }
 
     public void delete(ClassDetails classDetails) {
-        try (EntityManager em = MariaDbJPAConnection.createEntityManager()) {
+        try (EntityManager em = H2JPAConnection.createEntityManager()) {
             em.getTransaction().begin();
             try {
                 if (!em.contains(classDetails)) {
@@ -68,7 +68,7 @@ public class ClassDetailsDao {
     }
 
     public void deleteByClassId(int classId) {
-        try (EntityManager em = MariaDbJPAConnection.createEntityManager()) {
+        try (EntityManager em = H2JPAConnection.createEntityManager()) {
             em.getTransaction().begin();
             try {
                 em.createQuery("DELETE FROM ClassDetails cd WHERE cd.classModel.classId = :cid")
@@ -84,7 +84,7 @@ public class ClassDetailsDao {
     }
 
     public List<ClassDetails> findByClassId(int classId) {
-        try (EntityManager em = MariaDbJPAConnection.createEntityManager()) {
+        try (EntityManager em = H2JPAConnection.createEntityManager()) {
             TypedQuery<ClassDetails> query = em.createQuery(
                     "SELECT cd FROM ClassDetails cd WHERE cd.classModel.classId = :cid",
                     ClassDetails.class
@@ -95,7 +95,7 @@ public class ClassDetailsDao {
     }
 
     public List<ClassDetails> findByStudentId(int userId) {
-        try (EntityManager em = MariaDbJPAConnection.createEntityManager()) {
+        try (EntityManager em = H2JPAConnection.createEntityManager()) {
             TypedQuery<ClassDetails> query = em.createQuery(
                     "SELECT cd FROM ClassDetails cd WHERE cd.student.userId = :uid",
                     ClassDetails.class
@@ -106,7 +106,7 @@ public class ClassDetailsDao {
     }
 
     public boolean existsByUserAndClass(int userId, int classId) {
-        try (EntityManager em = MariaDbJPAConnection.createEntityManager()) {
+        try (EntityManager em = H2JPAConnection.createEntityManager()) {
             TypedQuery<Long> query = em.createQuery(
                     "SELECT COUNT(cd) FROM ClassDetails cd " +
                             "WHERE cd.student.userId = :uid AND cd.classModel.classId = :cid",

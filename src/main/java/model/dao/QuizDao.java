@@ -2,7 +2,7 @@ package model.dao;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
-import model.datasource.MariaDbJPAConnection;
+import model.datasource.H2JPAConnection;
 import model.entity.Quiz;
 
 import java.util.List;
@@ -10,7 +10,7 @@ import java.util.List;
 public class QuizDao {
 
     public void persist(Quiz quiz) {
-        try (EntityManager em = MariaDbJPAConnection.createEntityManager()) {
+        try (EntityManager em = H2JPAConnection.createEntityManager()) {
             em.getTransaction().begin();
             try {
                 em.persist(quiz);
@@ -23,20 +23,20 @@ public class QuizDao {
     }
 
     public Quiz find(int quizId) {
-        try (EntityManager em = MariaDbJPAConnection.createEntityManager()) {
+        try (EntityManager em = H2JPAConnection.createEntityManager()) {
             return em.find(Quiz.class, Integer.valueOf(quizId));
         }
     }
 
     public List<Quiz> findAll() {
-        try (EntityManager em = MariaDbJPAConnection.createEntityManager()) {
+        try (EntityManager em = H2JPAConnection.createEntityManager()) {
             TypedQuery<Quiz> query = em.createQuery("SELECT q FROM Quiz q", Quiz.class);
             return query.getResultList();
         }
     }
 
     public void update(Quiz quiz) {
-        try (EntityManager em = MariaDbJPAConnection.createEntityManager()) {
+        try (EntityManager em = H2JPAConnection.createEntityManager()) {
             em.getTransaction().begin();
             try {
                 em.merge(quiz);
@@ -49,7 +49,7 @@ public class QuizDao {
     }
 
     public void delete(Quiz quiz) {
-        try (EntityManager em = MariaDbJPAConnection.createEntityManager()) {
+        try (EntityManager em = H2JPAConnection.createEntityManager()) {
             em.getTransaction().begin();
             try {
                 if (!em.contains(quiz)) {
@@ -65,7 +65,7 @@ public class QuizDao {
     }
 
     public List<Quiz> findByUserId(int userId) {
-        try (EntityManager em = MariaDbJPAConnection.createEntityManager()) {
+        try (EntityManager em = H2JPAConnection.createEntityManager()) {
             TypedQuery<Quiz> query = em.createQuery(
                     "SELECT q FROM Quiz q WHERE q.user.userId = :uid",
                     Quiz.class
@@ -76,7 +76,7 @@ public class QuizDao {
     }
 
     public boolean existsByUserAndQuestionCount(int userId, int noOfQuestions) {
-        try (EntityManager em = MariaDbJPAConnection.createEntityManager()) {
+        try (EntityManager em = H2JPAConnection.createEntityManager()) {
             TypedQuery<Long> query = em.createQuery(
                     "SELECT COUNT(q) FROM Quiz q " +
                             "WHERE q.user.userId = :uid AND q.noOfQuestions = :count",
