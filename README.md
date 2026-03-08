@@ -16,6 +16,23 @@ This project aims to create a simple and user-friendly flashcard platform that h
 - Track learning progress
 - View statistics
 
+## database: H2
+
+## Cau lenh de tao file .exe(cai phan mem "wit tool set 3.11.2")
+jpackage `                                                                                                       
+>>   --type exe `                                                                                                                                                
+>>   --name Fliply `                                                                                                                                             
+>>   --input target `                                                                                                                                            
+>>   --main-jar fliply-1.0-SNAPSHOT.jar `                                                                                                                        
+>>   --main-class Main `                                                                                                                                         
+>>   --icon src/main/resources/images/icon.ico `                                                                                                                 
+>>   --dest installer `                                                                                                                                          
+>>   --app-version 1.0 `                                                                                                                                         
+>>   --win-menu `                                                                                                                                                
+>>   --win-shortcut `                                                                                                                                            
+>>   --win-dir-chooser `                                                                                                                                         
+>>   --resource-dir installer-resources
+          
 ## Trello Board
 [https://trello.com/w/sep1_group3/home](https://trello.com/w/sep1_group3/home)
 
